@@ -25,14 +25,17 @@ def generate_svg(map_graph, trips, frame, scale):
         direct_distance = map_distance(x1,y1,x2,y2)
         rail_distance = map_graph.network_distance(x1,y1,x2,y2)
         if rail_distance*1.2 < direct_distance:
+            is_using = True
             color = 'blue'
         else:
+            is_using = False
             color = 'red'
         cx1,cy1 = map_to_frame_point(x1,y1,frame,scale)
         cx2,cy2 = map_to_frame_point(x2,y2,frame,scale)
-        #print '<circle cx="%f" cy="%f" r="1" stroke="%s" fill="%s"></circle>' % (cx1,cy1,color,color)
-        #print '<circle cx="%f" cy="%f" r="1" stroke="%s" fill="%s"></circle>' % (cx2,cy2,color,color)
-        print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.1"/>' % (cx1,cy1,cx2,cy2,color)
+        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.02"></circle>' % (cx1,cy1,color)
+        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.02"></circle>' % (cx2,cy2,color)
+        if not is_using:
+            print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.07"/>' % (cx1,cy1,cx2,cy2,color)
     print svg_element_close
     print footer
     
@@ -41,7 +44,7 @@ def main():
     data_files = sys.argv[1:]
     map_graph = MapGraph.read_map(data_files)
     map_graph.compute_apsp()
-    trips = [[float(x) for x in l.strip().split(',')] for l in open('trip1.txt').readlines()[1:]]
+    trips = [[float(x) for x in l.strip().split(',')] for l in open('../test/trip2.txt').readlines()[1:]]
     generate_svg(map_graph, trips, MAP_FRAME, SVG_SCALE)
     
     

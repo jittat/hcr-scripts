@@ -4,9 +4,9 @@ from array import array
 RAIL_ADVANTAGE_FACTOR = 3.0
 
 def map_to_frame_point(x, y, frame, scale):
-        cx = (x - frame['topleft'][1]) * scale
-        cy = (frame['topleft'][0] - y) * scale
-        return (cx,cy)
+    cx = (x - frame['topleft'][1]) * scale
+    cy = (frame['topleft'][0] - y) * scale
+    return (cx,cy)
 
 class Node:
     def __init__(self,
@@ -42,7 +42,7 @@ class Node:
             r = 3
         else:
             r = 1
-        return '<circle cx="%f" cy="%f" r="%f"></circle>' % (cx,cy,r)
+        return ('<circle cx="%f" cy="%f" r="%f"></circle>' % (cx,cy,r))
 
 class Edge:
     def __init__(self, node_id1, node_id2):
@@ -56,8 +56,8 @@ class Edge:
         self.node2 = nodes[self.node_id2]
 
     def length(self):
-        return (map_distance(self.node1.x, self.node1.y,
-                             self.node2.x, self.node2.y))/RAIL_ADVANTAGE_FACTOR
+        return ((map_distance(self.node1.x, self.node1.y,
+                             self.node2.x, self.node2.y))/RAIL_ADVANTAGE_FACTOR)
 
     def render(self, frame, scale, nodes=None):
         if nodes:
@@ -73,7 +73,7 @@ class Edge:
 
     
 class MapGraph:
-
+        
     INFINITY = 10000
 
     def __init__(self, nodes, edges):
@@ -107,7 +107,11 @@ class MapGraph:
     def network_distance(self,x1,y1,x2,y2):
         mind = MapGraph.INFINITY
         for n1 in self.nodes.values():
+            if not n1.is_station:
+                continue
             for n2 in self.nodes.values():
+                if not n2.is_station:
+                    continue
                 ni = self.__idmap[n1.id]
                 nj = self.__idmap[n2.id]
                 if ni != nj:
@@ -121,15 +125,22 @@ class MapGraph:
     def compute_apsp(self):
         n = len(self.nodes)
         idmap = {}
+        revmap = {}
         i = 0
         for nd in self.nodes.values():
             idmap[nd.id] = i
+            revmap[i] = nd
             i += 1
 
         d = [array('d') for i in range(n)]
         for i in range(n):
             for j in range(n):
-                d[i].append(MapGraph.INFINITY)
+                if revmap[i].is_station and revmap[j].is_station:
+                    n1 = revmap[i]
+                    n2 = revmap[j]
+                    d[i].append(map_distance(n1.x, n1.y, n2.x, n2.y))
+                else:
+                    d[i].append(MapGraph.INFINITY)
         for i in range(n):
             d[i][i] = 0
 
