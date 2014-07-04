@@ -15,7 +15,8 @@ class Node:
                  is_station=False,
                  x=0,
                  y=0,
-                 imported_line=''):
+                 imported_line='',
+                 options={}):
         self.id = id
         self.name = name
         self.is_station = is_station
@@ -45,11 +46,15 @@ class Node:
         return ('<circle cx="%f" cy="%f" r="%f"></circle>' % (cx,cy,r))
 
 class Edge:
-    def __init__(self, node_id1, node_id2):
+    def __init__(self, node_id1, node_id2, options={}):
         self.node_id1 = node_id1
         self.node_id2 = node_id2
         self.node1 = None
         self.node2 = None
+        if 'adv_factor' in options:
+            self.adv_factor = options.adv_factor
+        else:
+            self.adv_factor = RAIL_ADVANTAGE_FACTOR
 
     def associate_nodes(self, nodes):
         self.node1 = nodes[self.node_id1]
@@ -76,23 +81,27 @@ class MapGraph:
         
     INFINITY = 10000
 
-    def __init__(self, nodes, edges):
+    def __init__(self, nodes={}, edges={}):
         self.nodes = nodes
         self.edges = edges
 
         
     @staticmethod
-    def __read_from_file(filename, nodes, edges):
+    def __read_from_file(filename,
+                         nodes,
+                         edges,
+                         node_options={},
+                         edge_options={}):
         fp = open(filename)
         n,m = [int(x) for x in fp.readline().strip().split(',')]
         for i in range(n):
             l = fp.readline()
-            new_node = Node(imported_line=l)
+            new_node = Node(imported_line=l, options=node_options)
             nodes[new_node.id] = new_node
         for i in range(m):
             l = fp.readline()
             n1,n2 = [x.strip() for x in l.strip().split(',')]
-            new_edge = Edge(n1,n2)
+            new_edge = Edge(n1, n2, options=edge_options)
             edges[(n1,n2)] = new_edge
 
             
@@ -103,6 +112,17 @@ class MapGraph:
         for fname in filenames:
             MapGraph.__read_from_file(fname, nodes, edges)
         return MapGraph(nodes, edges)
+
+    def append_from_file(self,
+                         filename,
+                         node_options={},
+                         edge_options={}):
+
+        MapGraph.__read_from_file(filename,
+                                  self.nodes,
+                                  self.edges,
+                                  node_options,
+                                  edge_options)
 
     def network_distance(self,x1,y1,x2,y2):
         mind = MapGraph.INFINITY

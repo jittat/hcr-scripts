@@ -38,13 +38,40 @@ def generate_svg(map_graph, trips, frame, scale):
             print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.07"/>' % (cx1,cy1,cx2,cy2,color)
     print svg_element_close
     print footer
-    
+
+def read_network_config(filename):
+    nconfig = { 'networks': [],
+                'trips': [] }
+    lines = open(filename).readlines()
+    for l in lines:
+        items = l.strip().split()
+        if len(items)==0:
+            continue
+        if items[0] == 'network':
+            nconfig['networks'].append(items[1])
+        elif items[0] == 'trip':
+            nconfig['trips'].append(items[1])
+    return nconfig
+
+def build_map(network_config):
+    map_graph = MapGraph()
+    for n in network_config['networks']:
+        map_graph.append_from_file(n)
+    return map_graph
+
+def read_trip(filename):
+    return [[float(x) for x in l.strip().split(',')]
+            for l in open(filename).readlines()[1:]]
 
 def main():
-    data_files = sys.argv[1:]
-    map_graph = MapGraph.read_map(data_files)
+    network_config = read_network_config(sys.argv[1])
+
+    map_graph = build_map(network_config)
     map_graph.compute_apsp()
-    trips = [[float(x) for x in l.strip().split(',')] for l in open('../test/trip2.txt').readlines()[1:]]
+
+    if(len(network_config['trips'])==0):
+        trips = read_trip(sys.argv[2])
+
     generate_svg(map_graph, trips, MAP_FRAME, SVG_SCALE)
     
     
