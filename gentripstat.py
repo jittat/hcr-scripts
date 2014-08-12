@@ -50,10 +50,10 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
             travel_distance = direct_distance
         cx1,cy1 = map_to_frame_point(x1,y1,frame,scale)
         cx2,cy2 = map_to_frame_point(x2,y2,frame,scale)
-        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.02"></circle>' % (cx1,cy1,color)
-        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.02"></circle>' % (cx2,cy2,color)
+        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.01"></circle>' % (cx1,cy1,color)
+        #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.01"></circle>' % (cx2,cy2,color)
         if not is_using:
-            print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.2"/>' % (cx1,cy1,cx2,cy2,color)
+            print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.15"/>' % (cx1,cy1,cx2,cy2,color)
 
         tnum += 1
 
