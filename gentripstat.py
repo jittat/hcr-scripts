@@ -25,6 +25,10 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
     for e in map_graph.edges.values():
         print e.render(frame, scale, map_graph.nodes)
     total_trips = len(trips)
+    total_org_distance = 0
+    total_org_switch_distance = 0
+    total_new_switch_distance = 0
+
     switched_trips = 0
 
     tnum = 0
@@ -39,11 +43,14 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
             direct_distance = results[tnum][0]
             rail_distance = results[tnum][1]
 
+        total_org_distance += direct_distance
         if rail_distance*1.2 < direct_distance:
             is_using = True
             color = 'blue'
             switched_trips += 1
             travel_distance = rail_distance
+            total_org_switch_distance += direct_distance
+            total_new_switch_distance += rail_distance
         else:
             is_using = False
             color = 'red'
@@ -58,8 +65,18 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
         tnum += 1
 
     print svg_element_close
-    #print '<br>'
-    #print '% usage: ',float(switched_trips*100)/total_trips
+    print '<br>'
+    print '<small>'
+    DIST_RATIO = 2./0.140961
+    print 'original avarage distance: %.2f<br>' % (float(total_org_distance * DIST_RATIO)/total_trips)
+    print '%% switch: %.2f<br>' % (float(switched_trips*100)/total_trips)
+    if switched_trips > 0:
+        print ('[switch-only-stat] avarage distance before switch: %.2f<br>'
+               % (float(total_org_switch_distance*DIST_RATIO)/switched_trips))
+        print ('[switch-only-stat] avarage distance after switch: %.2f (%.2f%% faster)<br>'
+               % (float(total_new_switch_distance*DIST_RATIO)/switched_trips,
+                  100. - total_new_switch_distance*100/total_org_switch_distance))
+    print '</small>'
     #print footer
 
 def read_network_config(filename):
