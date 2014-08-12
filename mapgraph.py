@@ -16,12 +16,16 @@ class Node:
                  x=0,
                  y=0,
                  imported_line='',
-                 options={}):
+                 options=None):
         self.id = id
         self.name = name
         self.is_station = is_station
         self.x = x
         self.y = y
+        if options:
+            self.options = options
+        else:
+            self.options = {}
         if imported_line:
             self.parse_line(imported_line)
 
@@ -43,16 +47,23 @@ class Node:
             r = 3
         else:
             r = 1
-        return ('<circle cx="%f" cy="%f" r="%f"></circle>' % (cx,cy,r))
+        if 'color' in self.options:
+            return ('<circle cx="%f" cy="%f" r="%f" fill="%s"></circle>' % (cx,cy,r,self.options['color']))
+        else:
+            return ('<circle cx="%f" cy="%f" r="%f"></circle>' % (cx,cy,r))
 
 class Edge:
-    def __init__(self, node_id1, node_id2, options={}):
+    def __init__(self, node_id1, node_id2, options=None):
         self.node_id1 = node_id1
         self.node_id2 = node_id2
         self.node1 = None
         self.node2 = None
-        if 'adv_factor' in options:
-            self.adv_factor = options.adv_factor
+        if options:
+            self.options = options
+        else:
+            self.options = {}
+        if options and ('adv_factor' in options):
+            self.adv_factor = options['adv_factor']
         else:
             self.adv_factor = RAIL_ADVANTAGE_FACTOR
 
@@ -62,7 +73,7 @@ class Edge:
 
     def length(self):
         return ((map_distance(self.node1.x, self.node1.y,
-                             self.node2.x, self.node2.y))/RAIL_ADVANTAGE_FACTOR)
+                              self.node2.x, self.node2.y))/self.adv_factor)
 
     def render(self, frame, scale, nodes=None):
         if nodes:
@@ -73,8 +84,12 @@ class Edge:
             n2 = self.node2
         cx1, cy1 = n1.render_location(frame, scale)
         cx2, cy2 = n2.render_location(frame, scale)
-        return ('<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="black"/>' %
-                (cx1,cy1,cx2,cy2))
+        if 'color' in self.options:
+            return ('<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s"/>' %
+                    (cx1,cy1,cx2,cy2,self.options['color']))
+        else:
+            return ('<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="black"/>' %
+                    (cx1,cy1,cx2,cy2))
 
     
 class MapGraph:
@@ -90,10 +105,25 @@ class MapGraph:
     def __read_from_file(filename,
                          nodes,
                          edges,
-                         node_options={},
-                         edge_options={}):
+                         options=None,
+                         node_options=None,
+                         edge_options=None):
         fp = open(filename)
         n,m = [int(x) for x in fp.readline().strip().split(',')]
+
+        if not node_options:
+            node_options = {}
+        if not edge_options:
+            edge_options = {}
+        if options:
+            for option in options:
+                key,val = option.split(':')
+                if key == 'color':
+                    node_options['color'] = val
+                    edge_options['color'] = val
+                if key == 'adv_factor':
+                    edge_options['adv_factor'] = float(val)
+        
         for i in range(n):
             l = fp.readline()
             new_node = Node(imported_line=l, options=node_options)
@@ -115,12 +145,14 @@ class MapGraph:
 
     def append_from_file(self,
                          filename,
-                         node_options={},
-                         edge_options={}):
+                         options=None,
+                         node_options=None,
+                         edge_options=None):
 
         MapGraph.__read_from_file(filename,
                                   self.nodes,
                                   self.edges,
+                                  options,
                                   node_options,
                                   edge_options)
 

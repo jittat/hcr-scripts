@@ -71,7 +71,7 @@ def read_network_config(filename):
         if len(items)==0:
             continue
         if items[0] == 'network':
-            nconfig['networks'].append(items[1])
+            nconfig['networks'].append(items[1:])
         elif items[0] == 'trip':
             nconfig['trips'].append(items[1])
     return nconfig
@@ -79,7 +79,9 @@ def read_network_config(filename):
 def build_map(network_config):
     map_graph = MapGraph()
     for n in network_config['networks']:
-        map_graph.append_from_file(n)
+        fname = n[0]
+        options = n[1:]
+        map_graph.append_from_file(fname, options)
     return map_graph
 
 def read_trip(filename):
