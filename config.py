@@ -1,6 +1,6 @@
-MAP_FRAME = {'topleft': (13.831030, 100.437409),
+MAP_FRAME = {'topleft': (13.859017, 100.437409),
              'bottomright': (13.632925, 100.659538)}
 #SVG_SIZE = (888, 792)
 #SVG_SCALE = 4000
-SVG_SIZE = (222*3, 198*3)
+SVG_SIZE = (222*3, 226*3)
 SVG_SCALE = 3000

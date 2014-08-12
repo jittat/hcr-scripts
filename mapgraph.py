@@ -139,6 +139,7 @@ class MapGraph:
                          + self.__d[ni][nj]
                          + map_distance(n2.x,n2.y,x2,y2))
                     if d < mind:
+                        #print ">>", n1.id, ni, n2.id, nj, self.__d[ni][nj]
                         mind = d
         return mind
 
@@ -176,7 +177,43 @@ class MapGraph:
             for i in range(n):
                 for j in range(n):
                     if d[i][j] > d[i][k] + d[k][j]:
-                        d[i][j] = d[k][j]
+                        d[i][j] = d[i][k] + d[k][j]
 
         self.__idmap = idmap
         self.__d = d
+
+        
+    def export_raw_network(self, filename):
+        n = len(self.nodes)
+        f = open(filename,'w')
+        m = len(self.edges)
+
+        print >> f, n, m
+
+        idmap = {}
+        revmap = {}
+        i = 0
+        for nd in self.nodes.values():
+            idmap[nd.id] = i
+            revmap[i] = nd
+
+            if nd.is_station:
+                station_flag = 1
+            else:
+                station_flag = 0
+
+            print >> f, i, station_flag, nd.id, nd.x, nd.y
+
+            i += 1
+
+        for k,e in self.edges.items():
+            (nid1,nid2) = k
+            u = idmap[nid1]
+            v = idmap[nid2]
+            e.associate_nodes(self.nodes)
+
+            print >> f, u, v, e.length()
+
+        f.close()
+        
+        
