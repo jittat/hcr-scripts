@@ -1,0 +1,54 @@
+27,26
+cpy1,chaophraya,1,13.913208, 100.491422
+cpy2,chaophraya,0,13.900128, 100.489276
+cpy3,chaophraya,0,13.896295, 100.490650
+cpy4,chaophraya,0,13.896295, 100.490650
+cpy5,chaophraya,0,13.874944, 100.476573
+cpy6,chaophraya,0,13.854965, 100.479320
+cpy7,chaophraya,0,13.847632, 100.488676
+cpy8,chaophraya,1,13.842132, 100.490993
+cpy9,chaophraya,1,13.824380, 100.498975
+cpy10,chaophraya,0,13.818712, 100.502666
+cpy11,chaophraya,1,13.812711, 100.513824
+cpy12,chaophraya,1,13.812295, 100.517515
+cpy13,chaophraya,1,13.798708, 100.516742
+cpy14,chaophraya,1,13.782204, 100.501636
+cpy15,chaophraya,1,13.772117, 100.499919
+cpy16,chaophraya,1,13.764031, 100.494083
+kb1,bangkoknoi,1,13.760554, 100.487597
+cpy17,chaophraya,1,13.755861, 100.487045
+cpy18,chaophraya,1,13.742688, 100.491251
+cpy19,chaophraya,1,13.736101, 100.508674
+cpy20,chaophraya,1,13.728598, 100.512537
+cpy21,chaophraya,1,13.719843, 100.512451
+cpy22,chaophraya,1,13.709837, 100.506700
+cpy23,chaophraya,1,13.706501, 100.503438
+cpy24,chaophraya,0,13.706501, 100.503438
+cpy25,chaophraya,1,13.706501, 100.503438
+cpy26,chaophraya,1,13.685070, 100.500177
+cpy1,cpy2
+cpy2,cpy3
+cpy3,cpy4
+cpy4,cpy5
+cpy5,cpy6
+cpy6,cpy7
+cpy7,cpy8
+cpy8,cpy9
+cpy9,cpy10
+cpy10,cpy11
+cpy11,cpy12
+cpy12,cpy13
+cpy13,cpy14
+cpy14,cpy15
+cpy15,cpy16
+cpy16,kb1
+kb1,cpy17
+cpy17,cpy18
+cpy18,cpy19
+cpy19,cpy20
+cpy20,cpy21
+cpy21,cpy22
+cpy22,cpy23
+cpy23,cpy24
+cpy24,cpy25
+cpy25,cpy26

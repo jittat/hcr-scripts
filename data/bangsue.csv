@@ -1,0 +1,16 @@
+8,7
+kbs1,bangsue,1,13.797677, 100.537540
+kbs2,bangsue,1,13.796968, 100.544363
+kbs3,bangsue,1,13.796260, 100.550071
+kbs4,bangsue,1,13.795468, 100.556423
+kbs5,bangsue,1,13.794718, 100.566122
+kbs6,bangsue,1,13.796260, 100.573975
+kbs7,bangsue,1,13.797510, 100.580927
+kbsladprao,bangsue,1,13.799219, 100.589038
+kbs1,kbs2
+kbs2,kbs3
+kbs3,kbs4
+kbs4,kbs5
+kbs5,kbs6
+kbs6,kbs7
+kbs7,kbsladprao

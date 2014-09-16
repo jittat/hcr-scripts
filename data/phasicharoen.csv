@@ -1,0 +1,22 @@
+10,9
+kpc1,phasicharoen,0,13.722900, 100.470435
+kpc2,phasicharoen,1,13.720351, 100.463290
+kpc3,phasicharoen,1,13.718705, 100.458655
+kpc4,phasicharoen,1,13.717183, 100.454246
+kpc5,phasicharoen,1,13.713962, 100.445105
+kpc6,phasicharoen,1,13.711815, 100.439032
+kpc7,phasicharoen,1,13.705473, 100.420879
+kpc8,phasicharoen,1,13.700720, 100.407403
+kpc9,phasicharoen,1,13.695174, 100.391696
+kpc10,phasicharoen,1,13.691713, 100.381311
+kpc1,kpc2
+kpc2,kpc3
+kpc3,kpc4
+kpc4,kpc5
+kpc5,kpc6
+kpc6,kpc7
+kpc7,kpc8
+kpc8,kpc9
+kpc9,kpc10
+
+

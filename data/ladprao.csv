@@ -1,0 +1,50 @@
+25,24
+klp0g,ladprao,1,13.899990, 100.611402
+klp0f,ladprao,1,13.898511, 100.608988
+klp0e,ladprao,1,13.897074, 100.607003
+klp0d,ladprao,1,13.895387, 100.605576
+klp0c,ladprao,1,13.887466, 100.594471
+klp0b,ladprao,1,13.882467, 100.589987
+klp0a,ladprao,1,13.880071, 100.588270
+klp0,ladprao,1,13.870156, 100.587283
+klp1,ladprao,1,13.858892, 100.586378
+klp2,ladprao,1,13.856517, 100.587536
+klp3,ladprao,1,13.844100, 100.589768
+klp4,ladprao,1,13.837725, 100.591098
+klp5,ladprao,1,13.832100, 100.589768
+klp6,ladprao,1,13.824307, 100.589081
+klp7,ladprao,1,13.817889, 100.589510
+klp8,ladprao,1,13.812472, 100.588480
+klp9,ladprao,1,13.803220, 100.588309
+kbsladprao,bangsue,1,13.799219, 100.589038
+klp11,ladprao,1,13.789050, 100.590025
+klp12,ladprao,1,13.782006, 100.591871
+klp13,ladprao,1,13.779380, 100.593459
+klp14,ladprao,1,13.773711, 100.593072
+klp15,ladprao,1,13.763958, 100.594703
+klp16,ladprao,1,13.756413, 100.598651
+klp17,ladprao,1,13.751077, 100.604187
+klp0g,klp0f
+klp0f,klp0e
+klp0e,klp0d
+klp0d,klp0c
+klp0c,klp0b
+klp0b,klp0a
+klp0a,klp0
+klp0,klp1
+klp1,klp2
+klp2,klp3
+klp3,klp4
+klp4,klp5
+klp5,klp6
+klp6,klp7
+klp7,klp8
+klp8,klp9
+klp9,kbsladprao
+kbsladprao,klp11
+klp11,klp12
+klp12,klp13
+klp13,klp14
+klp14,klp15
+klp15,klp16
+klp16,klp17
