@@ -81,7 +81,8 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
 
 def read_network_config(filename):
     nconfig = { 'networks': [],
-                'trips': [] }
+                'trips': [],
+                'max-walk-distance': []}
     lines = open(filename).readlines()
     for l in lines:
         items = l.strip().split()
@@ -91,6 +92,8 @@ def read_network_config(filename):
             nconfig['networks'].append(items[1:])
         elif items[0] == 'trip':
             nconfig['trips'].append(items[1])
+        elif items[0] == 'max-walk-distance':
+            nconfig['max-walk-distance'].append(items[1])
     return nconfig
 
 def build_map(network_config):
@@ -120,7 +123,10 @@ def main():
     else:
         map_graph.export_raw_network('net.raw')
         calstat_script = os.path.abspath(os.path.join(os.path.dirname(__file__), 'calstat'))
-        cmd = '%s net.raw %s > result.out' % (calstat_script, sys.argv[2])
+        if ('max-walk-distance' in network_config) and (len(network_config['max-walk-distance']) > 0):
+            cmd = '%s net.raw %s %f > result.out' % (calstat_script, sys.argv[2], float(network_config['max-walk-distance'][0]))
+        else:
+            cmd = '%s net.raw %s > result.out' % (calstat_script, sys.argv[2])
         os.system(cmd)
         results = read_results('result.out')
         
