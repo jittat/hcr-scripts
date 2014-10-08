@@ -20,7 +20,7 @@ double distance(double sx, double sy, double tx, double ty)
   return sqrt((sx-tx)*(sx-tx) + (sy-ty)*(sy-ty));
 }
 
-void read_graph(char* fname)
+void read_graph(char* fname, double dbound)
 {
   FILE* fp = fopen(fname, "r");
   char buff[100];
@@ -46,8 +46,11 @@ void read_graph(char* fname)
 
   for(int i=0; i<n; i++)
     for(int j=0; j<n; j++)
-      if((d[i][j] >= INFTY-0.1) && (is_station[i]) && (is_station[j]))
-        d[i][j] = distance(x[i],y[i],x[j],y[j]);
+      if((d[i][j] >= INFTY-0.1) && (is_station[i]) && (is_station[j])) {
+        double dist = distance(x[i],y[i],x[j],y[j]);
+        if(dist < dbound)
+          d[i][j] = dist;
+      }
   
   fclose(fp);
 }
@@ -125,12 +128,12 @@ void process(char* fname, double dbound)
 
 main(int argc, char* argv[])
 {
-  read_graph(argv[1]);
-  asap();
   if(argc==4)
     dist_bound = atof(argv[3]) * DIST_SCALE;
   else
     dist_bound = MAX_DISTANCE;
+  read_graph(argv[1], dist_bound);
+  asap();
   process(argv[2], dist_bound);
 }
 
