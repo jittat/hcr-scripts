@@ -12,7 +12,7 @@ MAP_FRAME = config.MAP_FRAME
 SVG_SIZE = config.SVG_SIZE
 SVG_SCALE = config.SVG_SCALE
 
-def generate_svg(map_graph, trips, frame, scale, results=None):
+def generate_svg(map_graph, trips, frame, scale, results=None, config=None):
     header = "<html><body>"
     svg_element_open = '<svg width="%d" height="%d" style="border: 1px solid gray">' % (SVG_SIZE[0], SVG_SIZE[1])
     svg_element_close = "</svg>"
@@ -59,8 +59,18 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
         cx2,cy2 = map_to_frame_point(x2,y2,frame,scale)
         #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.01"></circle>' % (cx1,cy1,color)
         #print '<circle cx="%f" cy="%f" r="10" fill="%s" fill-opacity="0.01"></circle>' % (cx2,cy2,color)
-        if not is_using:
-            print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.15"/>' % (cx1,cy1,cx2,cy2,color)
+
+        shows_reject = True
+        if (config and (len(config['display']) > 0) and
+            config['display'][0] == ['accept']):
+            shows_reject = False
+
+        if shows_reject:
+            if not is_using:
+                print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.15"/>' % (cx1,cy1,cx2,cy2,color)
+        else:
+            if is_using:
+                print '<line x1="%f" y1="%f" x2="%f" y2="%f" stroke="%s" stroke-opacity="0.15"/>' % (cx1,cy1,cx2,cy2,color)
 
         tnum += 1
 
@@ -80,20 +90,22 @@ def generate_svg(map_graph, trips, frame, scale, results=None):
     #print footer
 
 def read_network_config(filename):
+    config_map = { 'network': 'networks',
+                   'trip': 'trips',
+                   'max-walk-distance': 'max-walk-distance',
+                   'display': 'display' }
+
     nconfig = { 'networks': [],
                 'trips': [],
-                'max-walk-distance': []}
+                'max-walk-distance': [],
+                'display': [] }
     lines = open(filename).readlines()
     for l in lines:
         items = l.strip().split()
         if len(items)==0:
             continue
-        if items[0] == 'network':
-            nconfig['networks'].append(items[1:])
-        elif items[0] == 'trip':
-            nconfig['trips'].append(items[1])
-        elif items[0] == 'max-walk-distance':
-            nconfig['max-walk-distance'].append(items[1])
+        if items[0] in config_map:
+            nconfig[config_map[items[0]]].append(items[1:])
     return nconfig
 
 def build_map(network_config):
@@ -123,17 +135,31 @@ def main():
     else:
         map_graph.export_raw_network('net.raw')
         calstat_script = os.path.abspath(os.path.join(os.path.dirname(__file__), 'calstat'))
-        if ('max-walk-distance' in network_config) and (len(network_config['max-walk-distance']) > 0):
-            cmd = '%s net.raw %s %f > result.out' % (calstat_script, sys.argv[2], float(network_config['max-walk-distance'][0]))
+
+        if (('max-walk-distance' in network_config) and
+            (len(network_config['max-walk-distance']) > 0)):
+            try:
+                max_walk_distance = float(network_config['max-walk-distance'][0][0])
+            except:
+                max_walk_distance = -1
+            cmd = '%s net.raw %s %f > result.out' % (calstat_script,
+                                                     sys.argv[2],
+                                                     max_walk_distance)
         else:
             cmd = '%s net.raw %s > result.out' % (calstat_script, sys.argv[2])
+
         os.system(cmd)
         results = read_results('result.out')
         
     if(len(network_config['trips'])==0):
         trips = read_trip(sys.argv[2])
 
-    generate_svg(map_graph, trips, MAP_FRAME, SVG_SCALE, results)
+    generate_svg(map_graph,
+                 trips,
+                 MAP_FRAME,
+                 SVG_SCALE,
+                 results,
+                 network_config)
         
 if __name__ == '__main__':
     main()
